@@ -1,0 +1,31 @@
+{
+  "name": "feed-to-tweet",
+  "version": "0.0.1",
+  "description": "Easily power a Twitter bot with multiple feeds.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "twitter": "latest",
+    "feedparser": "latest",
+    "request": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/autonome/feed-to-tweet.git"
+  },
+  "keywords": [
+    "twitter",
+    "feeds",
+    "bots",
+    "bot"
+  ],
+  "author": "Dietrich Ayala <autonome@gmail.com> (http://metafluff.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/autonome/feed-to-tweet/issues"
+  },
+  "homepage": "https://github.com/autonome/feed-to-tweet#readme"
+}
