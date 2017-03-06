@@ -31,7 +31,7 @@ feedToTweet({
     {
       feedURL: 'http://www.funnycatsite.com/rss/all/'
       formatter: function(item) {
-        return 'CATS! ' + item.title + ' ' + item.link;
+        return 'OH YOU CATS! ' + item.title + ' ' + item.link;
       }
     }
   ],
@@ -46,16 +46,16 @@ feedToTweet({
 # Options
 
 * `feeds`: Array of feed objects. See example above. Formatter is optional.
-* `twitterCfg`: Object with Twitter keys and tokens. See example above.
-* `keywords`: Array of strings. Only items matching those strings in their title will be tweeted.
+* `twitterConfig`: Object with Twitter keys and tokens. See example above.
+* `keywords`: Array of strings. Only items with titles matching these are tweeted.
 * `checkIntervalMins`: Checks feeds every X minutes (default 60)
 * `tweetIntervalSecs`: Waits X seconds between posts to reduce flooding (default 10)
 
 # Evaluation Method
 
 The script checks the feed item's pubDate property, and if the difference
-between it and the current time is less than the interval you specified, the
-item will be Tweeted.
+between it and the current time is less than the checkIntervalMins value you
+specified, the item will be Tweeted.
 
 There's a risk of double-tweets or missed-tweets if you stop and restart the
 script, but under normal conditions this method works good enough.
@@ -63,4 +63,3 @@ script, but under normal conditions this method works good enough.
 # TODO
 
 * 
-
