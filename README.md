@@ -1,6 +1,8 @@
 feed-to-tweet
 =========
 
+[![NPM](https://nodei.co/npm/feed-to-tweet.png)](https://npmjs.org/package/feed-to-tweet)
+
 Easily power Twitter bots with content feeds.
 
 * Supports multiple source feeds
