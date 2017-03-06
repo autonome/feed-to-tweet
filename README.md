@@ -17,13 +17,13 @@ Easily power Twitter bots with content feeds.
 
 1. Install
 
-'''
+```
 npm install feed-to-tweet
-'''
+```
 
 2. Use in your script
 
-'''
+```
 var feedToTweet = require('feed-to-tweet');
 
 feedToTweet({
@@ -42,6 +42,7 @@ feedToTweet({
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
   }
 });
+```
 
 # Options
 
