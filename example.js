@@ -31,7 +31,7 @@ var feeds = [
 feedToTwitter({
   feeds: feeds,
   twitterConfig: twitterCfg,
-  keywords: ['intent'],
+  searches: ['^intent to '],
   checkIntervalMins: 6000,
   tweetIntervalSecs: 10
 });

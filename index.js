@@ -8,7 +8,8 @@ module.exports = function(cfg) {
   var feeds = cfg.feeds || [];
 
   // Tweets the item the title contains any of the terms
-  var keywords = cfg.keywords;
+  // This is backward compatible with old "keywords" param.
+  var searches = cfg.keywords ? cfg.keywords : (cfg.searches || []);
 
   // How often to check feeds, in minutes.
   // Defaults to once an hour.
@@ -17,6 +18,9 @@ module.exports = function(cfg) {
   // How often to process queue, in seconds.
   // Defaults to every 10 seconds
   var queueUpdateIntervalSecs = cfg.tweetIntervalSecs || 10;
+
+  // Debug mode
+  const DEBUG = cfg.debug || false;
 
 
   /****** END CONFIGURABLE BITS ******************/
@@ -91,9 +95,7 @@ module.exports = function(cfg) {
         diffInMins = (diff / 1000) / 60,
         feed = getFeedByURL(feedURL);
 
-    var titleMatches = keywords.some(function(k) {
-      return item.title.toLowerCase().indexOf(k.toLowerCase()) != -1;
-    });
+    var titleMatches = doesMatch(item.title, searches);
 
     if (titleMatches && diffInMins < feedUpdateIntervalMins) {
       item.title = decodeHTMLEntities(item.title);
@@ -102,6 +104,13 @@ module.exports = function(cfg) {
       queue.push(msg);
     }
   }
+
+  function doesMatch(stringToSearch, searches) {
+    return searches.some(function(search) {
+      return (new RegExp(search, 'i')).test(stringToSearch);
+    });
+  }
+
 
   // Supports entity names
   function decodeHTMLEntities(str) {

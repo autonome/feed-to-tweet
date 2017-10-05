@@ -7,7 +7,7 @@ Easily power Twitter bots with content feeds.
 
 * Supports multiple source feeds
 
-* Keyword filtering to only Tweet the matching items
+* Keyword and regular expression filtering against titles to only Tweet the matching items
 
 * Configurable feed checking interval
 
@@ -50,7 +50,7 @@ feedToTweet({
 
 * `feeds`: Array of feed objects. See example above. Formatter is optional.
 * `twitterConfig`: Object with Twitter keys and tokens. See example above.
-* `keywords`: Array of strings. Only items with titles matching these are tweeted.
+* `searches`: Array of string keywords or string regular expressions. Only items with matching titles are tweeted.
 * `checkIntervalMins`: Checks feeds every X minutes (default 60)
 * `tweetIntervalSecs`: Waits X seconds between posts to reduce flooding (default 10)
 
@@ -65,4 +65,5 @@ script, but under normal conditions this method works good enough.
 
 # TODO
 
-* 
+* Support searching on other fields than title 
+* Case-sensitive searching
