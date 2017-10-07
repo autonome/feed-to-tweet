@@ -43,13 +43,11 @@ module.exports = function(cfg) {
   }
 
   function parseFeeds(feeds) {
-    feeds.forEach(function(feed) {
-      parseFeed(feed.feedURL);
-    });
+    feeds.forEach(parseFeed);
   }
 
-  function parseFeed(url) {
-    var req = request(url)
+  function parseFeed(feedCfg) {
+    var req = request(feedCfg.feedURL)
       , feedparser = new FeedParser();
 
     req.on('error', function (error) {
@@ -74,32 +72,26 @@ module.exports = function(cfg) {
         , item;
 
       while (item = stream.read()) {
-        onItem(item, url);
+        onItem(item, feedCfg);
       }
     });
-  }
-
-  function getFeedByURL(feedURL) {
-    return feeds.filter(function(feed) {
-      return feed.feedURL == feedURL;
-    })[0];
   }
 
   // Process an item found in a feed
   //
   // If item is newer than configured feed check interval
   // then add it to the queue.
-  function onItem(item, feedURL) {
+  function onItem(item, feedCfg) {
     var pubDate = new Date(item.pubdate),
         diff = Date.now() - pubDate.getTime(),
-        diffInMins = (diff / 1000) / 60,
-        feed = getFeedByURL(feedURL);
+        diffInMins = (diff / 1000) / 60;
 
-    var titleMatches = doesMatch(item.title, searches);
+    var filters = feedCfg.searches ? searches.concat(feedCfg.searches) : searches;
+    var titleMatches = filters.length ? doesMatch(item.title, filters) : true;
 
     if (titleMatches && diffInMins < feedUpdateIntervalMins) {
       item.title = decodeHTMLEntities(item.title);
-      var msg = feed.formatter ? feed.formatter(item) :
+      var msg = feedCfg.formatter ? feedCfg.formatter(item) :
         item.title + ' ' + item.link;
       queue.push(msg);
     }

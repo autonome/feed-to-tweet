@@ -1,6 +1,6 @@
 {
   "name": "feed-to-tweet",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Easily power a Twitter bot with multiple feeds.",
   "main": "index.js",
   "scripts": {
