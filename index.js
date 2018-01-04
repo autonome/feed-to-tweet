@@ -57,13 +57,16 @@ module.exports = function(cfg) {
     req.on('response', function (res) {
       var stream = this;
 
-      if (res.statusCode != 200) return this.emit('error', new Error('Bad status code'));
+      if (res.statusCode != 200) {
+        return this.emit('error', new Error('Bad status code: ' + res.statusCode));
+      }
 
       stream.pipe(feedparser);
     });
 
     feedparser.on('error', function(error) {
       // always handle errors
+      console.error('feedparser error', error);
     });
     feedparser.on('readable', function() {
       // This is where the action is!
@@ -86,13 +89,18 @@ module.exports = function(cfg) {
         diff = Date.now() - pubDate.getTime(),
         diffInMins = (diff / 1000) / 60;
 
+    var title = item.title;
+
+    // Workaround in case feedparser update doesn't fix the escaping problem.
+    //var title = item['rss:title'] ? item['rss:title']['#'] : item.title;
+
     var filters = feedCfg.searches ? searches.concat(feedCfg.searches) : searches;
-    var titleMatches = filters.length ? doesMatch(item.title, filters) : true;
+    var titleMatches = filters.length ? doesMatch(title, filters) : true;
 
     if (titleMatches && diffInMins < feedUpdateIntervalMins) {
-      item.title = decodeHTMLEntities(item.title);
+      item.title = decodeHTMLEntities(title);
       var msg = feedCfg.formatter ? feedCfg.formatter(item) :
-        item.title + ' ' + item.link;
+        title + ' ' + item.link;
       queue.push(msg);
     }
   }

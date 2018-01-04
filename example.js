@@ -21,6 +21,7 @@ var feeds = [
       return 'Gecko: ' + item.title + ' ' + item.link;
     }
   },
+  /*
   {
     feedURL:'https://groups.google.com/a/chromium.org/forum/feed/blink-dev/topics/rss.xml?num=50',
     searches: ['^intent to '],
@@ -41,6 +42,7 @@ var feeds = [
       return 'Edge: ' + item.title + ' ' + item.link;
     }
   }
+  */
 ];
 
 feedToTwitter({
