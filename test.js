@@ -14,6 +14,14 @@ var twitterCfg = {
 };
 
 var feeds = [
+  // Test feed
+  {
+    feedURL: 'https://infinite-rss.glitch.me/?itemTitleBase=Does%20this%20element%20show%20up:%20%3Celement%3E&itemCount=1',
+    formatter: function(item) {
+      return 'Element test: ' + item.title + ' ' + item.link + ' ' + Date.now();
+    }
+  },
+  /*
   {
     feedURL: 'https://groups.google.com/forum/feed/mozilla.dev.platform/topics/rss.xml?num=50',
     searches: ['^intent to '],
@@ -21,7 +29,6 @@ var feeds = [
       return 'Gecko: ' + item.title + ' ' + item.link;
     }
   },
-  /*
   {
     feedURL:'https://groups.google.com/a/chromium.org/forum/feed/blink-dev/topics/rss.xml?num=50',
     searches: ['^intent to '],

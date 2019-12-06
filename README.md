@@ -53,6 +53,7 @@ feedToTweet({
 * `searches`: Array of string keywords or string regular expressions. Only items with matching titles are tweeted.
 * `checkIntervalMins`: Checks feeds every X minutes (default 60)
 * `tweetIntervalSecs`: Waits X seconds between posts to reduce flooding (default 10)
+* `debug`: Boolean to print out some debug logging
 
 # Evaluation Method
 

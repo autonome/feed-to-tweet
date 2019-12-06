@@ -3,36 +3,35 @@
 // Modularizerism.
 module.exports = function(cfg) {
 
-  var twitterConfig = cfg.twitterConfig;
+  let twitterConfig = cfg.twitterConfig;
 
-  var feeds = cfg.feeds || [];
+  let feeds = cfg.feeds || [];
 
   // Tweets the item the title contains any of the terms
   // This is backward compatible with old "keywords" param.
-  var searches = cfg.keywords ? cfg.keywords : (cfg.searches || []);
+  let searches = cfg.keywords ? cfg.keywords : (cfg.searches || []);
 
   // How often to check feeds, in minutes.
   // Defaults to once an hour.
-  var feedUpdateIntervalMins = cfg.checkIntervalMins || 60;
+  let feedUpdateIntervalMins = cfg.checkIntervalMins || 60;
 
   // How often to process queue, in seconds.
   // Defaults to every 10 seconds
-  var queueUpdateIntervalSecs = cfg.tweetIntervalSecs || 10;
+  let queueUpdateIntervalSecs = cfg.tweetIntervalSecs || 10;
 
   // Debug mode
   const DEBUG = cfg.debug || false;
 
-
   /****** END CONFIGURABLE BITS ******************/
 
-  var FeedParser = require('feedparser'),
+  const FeedParser = require('feedparser'),
       request = require('request'),
       Twitter = require('twitter');
 
-  var queue = [],
+  let queue = [],
       lastFeedCheck = null;
 
-  var client = new Twitter(twitterConfig);
+  let client = new Twitter(twitterConfig);
 
   function tweet(msg) {
     client.post('statuses/update', {status: msg},  function(error, tweetinfo, response) {
@@ -47,7 +46,7 @@ module.exports = function(cfg) {
   }
 
   function parseFeed(feedCfg) {
-    var req = request(feedCfg.feedURL)
+    let req = request(feedCfg.feedURL)
       , feedparser = new FeedParser();
 
     req.on('error', function (error) {
@@ -55,7 +54,7 @@ module.exports = function(cfg) {
       console.error('parseFeed', error)
     });
     req.on('response', function (res) {
-      var stream = this;
+      let stream = this;
 
       if (res.statusCode != 200) {
         return this.emit('error', new Error('Bad status code: ' + res.statusCode));
@@ -70,7 +69,7 @@ module.exports = function(cfg) {
     });
     feedparser.on('readable', function() {
       // This is where the action is!
-      var stream = this
+      let stream = this
         , meta = this.meta // **NOTE** the "meta" is always available in the context of the feedparser instance
         , item;
 
@@ -85,21 +84,20 @@ module.exports = function(cfg) {
   // If item is newer than configured feed check interval
   // then add it to the queue.
   function onItem(item, feedCfg) {
-    var pubDate = new Date(item.pubdate),
+    let pubDate = new Date(item.pubdate),
         diff = Date.now() - pubDate.getTime(),
         diffInMins = (diff / 1000) / 60;
 
-    var title = item.title;
+    // The feedparser module overly cleans .title, so prefer the
+    // raw version if available.
+    let title = item['rss:title'] ? item['rss:title']['#'] : item.title;
 
-    // Workaround in case feedparser update doesn't fix the escaping problem.
-    //var title = item['rss:title'] ? item['rss:title']['#'] : item.title;
-
-    var filters = feedCfg.searches ? searches.concat(feedCfg.searches) : searches;
-    var titleMatches = filters.length ? doesMatch(title, filters) : true;
+    let filters = feedCfg.searches ? searches.concat(feedCfg.searches) : searches;
+    let titleMatches = filters.length ? doesMatch(title, filters) : true;
 
     if (titleMatches && diffInMins < feedUpdateIntervalMins) {
       item.title = decodeHTMLEntities(title);
-      var msg = feedCfg.formatter ? feedCfg.formatter(item) :
+      let msg = feedCfg.formatter ? feedCfg.formatter(item) :
         title + ' ' + item.link;
       queue.push(msg);
     }
@@ -116,7 +114,7 @@ module.exports = function(cfg) {
   function decodeHTMLEntities(str) {
     return str.replace(/&#?(\w+);/g, function(match, code) {
       if (isNaN(code)) {
-        var namedEntities = {
+        let namedEntities = {
           quot: 34, amp: 38, lt: 60, gt: 62, nbsp: 160, copy: 169, reg: 174,
           deg: 176, frasl: 47, trade: 8482, euro: 8364, Agrave: 192, Aacute: 193,
           Acirc: 194, Atilde: 195, Auml: 196, Aring: 197, AElig: 198, Ccedil: 199,
@@ -160,7 +158,9 @@ module.exports = function(cfg) {
   // Notify registered channels of item.
   // Only supports Twitter atm.
   function notify(msg) {
-    console.log(msg);
+    if (DEBUG) {
+      console.log(msg);
+    }
     tweet(msg);
   }
 
